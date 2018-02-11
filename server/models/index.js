@@ -1,56 +1,37 @@
 var db = require('../db');
-var express = require('express');
 
 module.exports = {
-  findFKUser: function(obj) {
-    return db.query(`SELECT UserID FROM users WHERE username = ${obj.user}`);
-  },
-  findFKRoom: function(obj) {
-    return db.query(`SELECT RoomID FROM rooms WHERE roomname = ${obj.roomname}`);
-  },
 
   messages: {
-    get: function () {
-    // a function which produces all the messages
-
-    },
- 
-    post: function (obj) {
-    // a function which can be used to insert a message into the database
-
-      db.query(`INSERT INTO messages (message) VALUES (${obj.message})`, function(err, result) {
-        if (err) {
-          throw err;
-        } else {
-          console.log('posted message to SQL');
-        }
+    get: function (callback) {
+      var queryStr = 'select messages.id, messages.text, messages.roomname, users.username \
+                      from messages left outer join users on (messages.userid = users.id) \
+                      order by messages.id desc';
+      db.query(queryStr, function(err, results) {
+        callback(err, results);
       });
-
-      db.query(`INSERT INTO rooms (roomname) VALUES (${obj.roomname})`, function(err, result) {
-        if (err) {
-          throw err;
-        } else {
-          console.log('posted message to SQL');
-        }
-      });      
-    } 
-  },
-
-  users: {
-    // Ditto as above.
-    get: function () {
-    
     },
-    
-    post: function (obj) {
-      db.query(`INSERT INTO users (username) VALUES (${obj.username})`, function(err, result) {
-        if (err) {
-          throw err;
-        } else {
-          console.log('posted message to SQL');
-        }
+    post: function (params, callback) {
+      var queryStr = 'insert into messages(text, userid, roomname) \
+                      value (?, (select id from users where username = ? limit 1), ?)';
+      db.query(queryStr, params, function(err, results) {
+        callback(err, results);
+      });
+    }
+  },
+  users: {
+    get: function (callback) {
+      var queryStr = 'select * from users';
+      db.query(queryStr, function(err, results) {
+        callback(err, results);
+      });
+    },
+    post: function (params, callback) {
+      var queryStr = 'insert into users(username) values (?)';
+      db.query(queryStr, params, function(err, results) {
+        callback(err, results);
       });
     }
   }
-};
+  };
 

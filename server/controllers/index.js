@@ -1,20 +1,37 @@
 var models = require('../models');
-var express = require('express');
 
 module.exports = {
+
   messages: {
-    get: function (req, res) {}, // a function  which handles a get request for all messages
+    get: function (req, res) {
+      models.messages.get(function(err, results) {
+        if (err) { throw err}
+        res.json(results);
+      });
+    },
     post: function (req, res) {
-      req.query;
-    } // a function which handles posting a message to the database
+      var params = [req.body.message, req.body.username, req.body.roomname];
+      models.messages.post(params, function(err, results) {
+        if (err) { throw err }
+        res.sendStatus(201);
+      });
+    }
   },
 
   users: {
-    // Ditto as above
-    get: function (req, res) {},
+    get: function (req, res) {
+      models.users.get(function(err, results) {
+        if (err) { throw err }
+        res.json(results);
+      });
+    },
     post: function (req, res) {
-      req.query;
+      var params = [req.body.username];
+      models.users.post(params, function(err, results) {
+        if (err) { throw err }
+        res.sendStatus(201);
+      });
     }
   }
-};
+  };
 

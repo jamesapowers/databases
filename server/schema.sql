@@ -2,32 +2,23 @@ CREATE DATABASE chat;
 
 USE chat;
 
+CREATE TABLE messages (
+  /* Describe your table here.*/
 
+  id int NOT NULL AUTO_INCREMENT,
+  userid int NOT NULL,
+  text varchar(200)  NOT NULL,
+  roomname varchar(20),
+  PRIMARY KEY (ID)
+);
 
 /* Create other tables and define schemas for them here! */
 
+
 CREATE TABLE users (
-  UserID INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (UserID),
-  username VARCHAR(30)
-
-);
-
-CREATE TABLE rooms (
-  RoomID INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (RoomID),
-  roomname VARCHAR(30)
-);
-  /* Describe your table here.*/
-
-CREATE TABLE messages (
-  MessageID int NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (MessageID),
-  UserID int, 
-  RoomID int,
-  FOREIGN KEY (UserID) REFERENCES users(UserID),
-  FOREIGN KEY (RoomID) REFERENCES rooms(RoomID),
-  message VARCHAR(140)
+  id        int    NOT NULL AUTO_INCREMENT,
+  username  varchar(40)   NOT NULL,
+  PRIMARY KEY (ID)
 );
 
 /*  Execute this file from the command line by typing:
